@@ -1,1 +1,14 @@
 include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_print: true
+    prefer_const_constructors: true
+    prefer_final_locals: true
+    always_declare_return_types: true
+    omit_local_variable_types: false
+    avoid_redundant_argument_values: true
+    directives_ordering: true
+    sort_constructors_first: true
+    use_key_in_widget_constructors: true
+    require_trailing_commas: true
