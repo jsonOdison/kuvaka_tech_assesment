@@ -96,23 +96,63 @@ class TransactionPage extends StatelessWidget {
                   itemCount: transactions.length,
                   itemBuilder: (context, index) {
                     final t = transactions[index];
-                    return ListTile(
-                      title: Text(t.title),
-                      subtitle: Text(
-                        '${t.category} • ${DateFormat.yMMMd().format(t.date)}',
+                    return Dismissible(
+                      key: Key(t.id),
+                      direction:
+                          DismissDirection.endToStart, // swipe left to delete
+                      background: Container(
+                        color: Colors.redAccent,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Icon(Icons.delete, color: Colors.white),
                       ),
-                      trailing: Text(
-                        NumberFormatter.format(t.amount),
-                        style: TextStyle(
-                          color: t.isExpense ? Colors.red : Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onLongPress: () {
+                      confirmDismiss: (direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Delete Transaction'),
+                            content: Text(
+                              'Delete "${t.title}" from ${t.category}?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      onDismissed: (direction) {
                         context.read<TransactionBloc>().add(
                           DeleteTransactionEvent(t.id),
                         );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${t.title} deleted'),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
                       },
+                      child: ListTile(
+                        title: Text(t.title),
+                        subtitle: Text(
+                          '${t.category} • ${DateFormat.yMMMd().format(t.date)}',
+                        ),
+                        trailing: Text(
+                          NumberFormatter.format(t.amount),
+                          style: TextStyle(
+                            color: t.isExpense ? Colors.red : Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     );
                   },
                 ),
