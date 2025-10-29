@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kuvaka_tech_assesment/src/features/budget/presentation/bloc/pages/budget_page.dart';
 import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'features/transactions/presentation/pages/transaction_page.dart';
 
@@ -12,7 +13,7 @@ class AppScaffold extends StatefulWidget {
 class _AppScaffoldState extends State<AppScaffold> {
   int _index = 0;
 
-  final _pages = const [DashboardPage(), TransactionPage()];
+  final _pages = const [DashboardPage(), TransactionPage(), BudgetPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +31,7 @@ class _AppScaffoldState extends State<AppScaffold> {
             icon: Icon(Icons.list_alt),
             label: 'Transactions',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Budget'),
         ],
       ),
     );

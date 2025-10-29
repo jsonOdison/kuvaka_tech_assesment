@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:kuvaka_tech_assesment/src/app_scaffold.dart';
 import 'package:kuvaka_tech_assesment/src/core/app_theme/theme_cubit.dart';
-import 'package:kuvaka_tech_assesment/src/core/constants/hive_keys.dart';
+import 'package:kuvaka_tech_assesment/src/core/database/hive_init.dart';
 import 'package:kuvaka_tech_assesment/src/core/di/injection_container.dart'
     as di;
 import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/bloc/dashboard_bloc.dart';
-import 'package:kuvaka_tech_assesment/src/features/transactions/data/models/transaction_model.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/bloc/transactions_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  Hive.registerAdapter(TransactionModelAdapter());
-
-  await Hive.openBox<TransactionModel>(HiveKeys.transactions);
-  await Hive.openBox('budgets'); // imple laters
+  initHive();
 
   await di.init();
 
