@@ -11,10 +11,14 @@ class DashboardLoaded extends DashboardState {
     required this.income,
     required this.expense,
     required this.balance,
+    required this.categoryTotals,
+    required this.alerts,
   });
   final double income;
   final double expense;
   final double balance;
+  final Map<String, double> categoryTotals;
+  final List<String> alerts;
 }
 
 class DashboardError extends DashboardState {

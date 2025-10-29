@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kuvaka_tech_assesment/src/features/budget/domain/entities/budget_entiry.dart';
 import 'package:kuvaka_tech_assesment/src/features/budget/domain/usecases/add_budget.dart';
 import 'package:kuvaka_tech_assesment/src/features/budget/domain/usecases/delete_budget.dart';

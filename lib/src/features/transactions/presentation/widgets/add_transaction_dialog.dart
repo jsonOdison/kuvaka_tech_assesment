@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactional_entity.dart';
-import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/bloc/transactions_bloc.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../domain/entities/transactional_entity.dart';
+import '../bloc/transactions_bloc.dart';
 
 class AddTransactionDialog extends StatefulWidget {
   const AddTransactionDialog({super.key});
@@ -11,9 +13,20 @@ class AddTransactionDialog extends StatefulWidget {
 }
 
 class _AddTransactionDialogState extends State<AddTransactionDialog> {
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
-  bool isExpense = true;
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  String _selectedCategory = 'Food';
+  bool _isExpense = true;
+
+  final List<String> _categories = [
+    'Food',
+    'Bills',
+    'Travel',
+    'Shopping',
+    'Health',
+    'Salary',
+    'Other',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -23,25 +36,27 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: titleController,
+            controller: _titleController,
             decoration: const InputDecoration(labelText: 'Title'),
           ),
           TextField(
-            controller: amountController,
+            controller: _amountController,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(labelText: 'Amount'),
           ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Expense'),
-              Switch(
-                value: !isExpense,
-                onChanged: (val) => setState(() => isExpense = !val),
-              ),
-              const Text('Income'),
-            ],
+          const SizedBox(height: 8),
+          DropdownButtonFormField<String>(
+            value: _selectedCategory,
+            decoration: const InputDecoration(labelText: 'Category'),
+            items: _categories
+                .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                .toList(),
+            onChanged: (val) => setState(() => _selectedCategory = val!),
+          ),
+          SwitchListTile(
+            title: const Text('Expense?'),
+            value: _isExpense,
+            onChanged: (val) => setState(() => _isExpense = val),
           ),
         ],
       ),
@@ -52,18 +67,17 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            final title = titleController.text.trim();
-            final amount = double.tryParse(amountController.text) ?? 0.0;
-
+            final title = _titleController.text.trim();
+            final amount = double.tryParse(_amountController.text) ?? 0;
             if (title.isEmpty || amount <= 0) return;
 
             final transaction = TransactionEntity(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              id: Uuid().v4(),
               title: title,
               amount: amount,
+              category: _selectedCategory,
               date: DateTime.now(),
-              category: isExpense ? 'Expense' : 'Income',
-              isExpense: isExpense,
+              isExpense: _isExpense,
             );
 
             context.read<TransactionBloc>().add(
@@ -75,12 +89,5 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    titleController.dispose();
-    amountController.dispose();
-    super.dispose();
   }
 }

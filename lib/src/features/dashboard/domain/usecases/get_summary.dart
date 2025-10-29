@@ -4,21 +4,30 @@ class GetSummary {
   GetSummary(this.repository);
   final TransactionRepository repository;
 
-  Future<Map<String, double>> call() async {
-    final txs = await repository.getAllTransactions();
-    double totalIncome = 0;
-    double totalExpense = 0;
-    for (final t in txs) {
+  Future<Map<String, dynamic>> call() async {
+    final transactions = await repository.getAllTransactions();
+
+    double income = 0;
+    double expense = 0;
+    final Map<String, double> categoryTotals = {};
+
+    for (final t in transactions) {
       if (t.isExpense) {
-        totalExpense += t.amount;
+        expense += t.amount;
+        categoryTotals[t.category] =
+            (categoryTotals[t.category] ?? 0) + t.amount;
       } else {
-        totalIncome += t.amount;
+        income += t.amount;
       }
     }
+
+    final balance = income - expense;
+
     return {
-      'income': totalIncome,
-      'expense': totalExpense,
-      'balance': totalIncome - totalExpense,
+      'income': income,
+      'expense': expense,
+      'balance': balance,
+      'categoryTotals': categoryTotals,
     };
   }
 }

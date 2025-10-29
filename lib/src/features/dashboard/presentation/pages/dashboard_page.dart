@@ -19,49 +19,60 @@ class DashboardPage extends StatelessWidget {
         ),
         body: BlocBuilder<DashboardBloc, DashboardState>(
           builder: (context, state) {
-            if (state is DashboardLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is DashboardLoaded) {
-              final total = state.income + state.expense;
-              return Center(
+            if (state is DashboardLoaded) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: 180,
-                      height: 180,
-                      child: PieChart(
-                        PieChartData(
-                          sections: [
-                            PieChartSectionData(
-                              value: state.expense,
-                              title:
-                                  'Expense\n${(state.expense / total * 100).toStringAsFixed(1)}%',
-                              color: Colors.redAccent,
-                              titleStyle: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                              ),
-                            ),
-                            PieChartSectionData(
-                              value: state.income,
-                              title:
-                                  'Income\n${(state.income / total * 100).toStringAsFixed(1)}%',
-                              color: Colors.green,
-                              titleStyle: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                          centerSpaceRadius: 40,
-                        ),
-                      ),
+                    Text(
+                      'Balance: ₹${state.balance.toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                    const SizedBox(height: 20),
                     Text('Income: ₹${state.income.toStringAsFixed(2)}'),
                     Text('Expense: ₹${state.expense.toStringAsFixed(2)}'),
-                    Text('Balance: ₹${state.balance.toStringAsFixed(2)}'),
+                    const SizedBox(height: 20),
+
+                    // Pie Chart for Category Totals
+                    if (state.categoryTotals.isNotEmpty)
+                      SizedBox(
+                        height: 200,
+                        child: PieChart(
+                          PieChartData(
+                            sections: state.categoryTotals.entries.map((entry) {
+                              return PieChartSectionData(
+                                title: entry.key,
+                                value: entry.value,
+                                radius: 50,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+
+                    const SizedBox(height: 20),
+                    if (state.alerts.isNotEmpty)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Budget Alerts',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          for (final a in state.alerts)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4),
+                              child: Text(
+                                a,
+                                style: const TextStyle(color: Colors.redAccent),
+                              ),
+                            ),
+                        ],
+                      ),
                   ],
                 ),
               );

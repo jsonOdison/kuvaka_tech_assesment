@@ -45,12 +45,13 @@ Future<void> init() async {
   sl.registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(sl()));
 
   // use cases
+  //transaction
   sl.registerLazySingleton(() => GetAllTransactions(sl()));
   sl.registerLazySingleton(() => AddTransaction(sl()));
   sl.registerLazySingleton(() => DeleteTransaction(sl()));
-
+  //dashboard
   sl.registerLazySingleton(() => GetSummary(sl()));
-
+  //budget
   sl.registerLazySingleton(() => AddBudget(sl()));
   sl.registerLazySingleton(() => GetAllBudgets(sl()));
   sl.registerLazySingleton(() => UpdateBudget(sl()));
@@ -73,7 +74,9 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerFactory(() => DashboardBloc(sl()));
+  sl.registerFactory(
+    () => DashboardBloc(getSummary: sl(), getAllBudgets: sl()),
+  );
 
   // light mode or dark
   sl.registerLazySingleton(() => ThemeCubit());
