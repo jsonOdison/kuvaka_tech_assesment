@@ -1,5 +1,4 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kuvaka_tech_assesment/src/features/dashboard/domain/usecases/get_summary.dart';
 
 part 'dashboard_bloc_event.dart';
