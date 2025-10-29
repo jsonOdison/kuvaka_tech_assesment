@@ -3,9 +3,66 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactionl.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/bloc/transactions_bloc.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/widgets/add_transaction_dialog.dart';
 
-class TransactionPage extends StatelessWidget {
+class TransactionPage extends StatefulWidget {
   const TransactionPage({super.key});
+
+  @override
+  State<TransactionPage> createState() => _TransactionPageState();
+}
+
+class _TransactionPageState extends State<TransactionPage> {
+  final sampleTransactions = [
+    TransactionEntity(
+      id: '1',
+      title: 'Salary',
+      amount: 50000,
+      date: DateTime.now(),
+      category: 'Income',
+      isExpense: false,
+    ),
+    TransactionEntity(
+      id: '2',
+      title: 'Freelance',
+      amount: 15000,
+      date: DateTime.now(),
+      category: 'Income',
+      isExpense: false,
+    ),
+    TransactionEntity(
+      id: '3',
+      title: 'Groceries',
+      amount: 4000,
+      date: DateTime.now(),
+      category: 'Food',
+      isExpense: true,
+    ),
+    TransactionEntity(
+      id: '4',
+      title: 'Rent',
+      amount: 12000,
+      date: DateTime.now(),
+      category: 'Housing',
+      isExpense: true,
+    ),
+    TransactionEntity(
+      id: '5',
+      title: 'Utilities',
+      amount: 2000,
+      date: DateTime.now(),
+      category: 'Bills',
+      isExpense: true,
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    for (final tx in sampleTransactions) {
+      context.read<TransactionBloc>().add(AddTransactionEvent(tx));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,66 +118,13 @@ class TransactionPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showAddTransactionDialog(context);
+          showDialog(
+            context: context,
+            builder: (_) => const AddTransactionDialog(),
+          );
         },
         child: const Icon(Icons.add),
       ),
-    );
-  }
-
-  void _showAddTransactionDialog(BuildContext context) {
-    final titleController = TextEditingController();
-    final amountController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Add Transaction'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Title'),
-              ),
-              TextField(
-                controller: amountController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Amount'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final title = titleController.text.trim();
-                final amount = double.tryParse(amountController.text) ?? 0.0;
-                if (title.isNotEmpty && amount > 0) {
-                  final id = DateTime.now().millisecondsSinceEpoch.toString();
-                  final transaction = TransactionEntity(
-                    id: id,
-                    title: title,
-                    amount: amount,
-                    date: DateTime.now(),
-                    category: 'General',
-                    isExpense: true,
-                  );
-                  context.read<TransactionBloc>().add(
-                    AddTransactionEvent(transaction),
-                  );
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

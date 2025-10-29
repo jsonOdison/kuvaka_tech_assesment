@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
@@ -17,10 +18,43 @@ class DashboardPage extends StatelessWidget {
             if (state is DashboardLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is DashboardLoaded) {
+              final total = state.income + state.expense;
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(
+                      width: 180,
+                      height: 180,
+                      child: PieChart(
+                        PieChartData(
+                          sections: [
+                            PieChartSectionData(
+                              value: state.expense,
+                              title:
+                                  'Expense\n${(state.expense / total * 100).toStringAsFixed(1)}%',
+                              color: Colors.redAccent,
+                              titleStyle: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                            PieChartSectionData(
+                              value: state.income,
+                              title:
+                                  'Income\n${(state.income / total * 100).toStringAsFixed(1)}%',
+                              color: Colors.green,
+                              titleStyle: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                          centerSpaceRadius: 40,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     Text('Income: ₹${state.income.toStringAsFixed(2)}'),
                     Text('Expense: ₹${state.expense.toStringAsFixed(2)}'),
                     Text('Balance: ₹${state.balance.toStringAsFixed(2)}'),
