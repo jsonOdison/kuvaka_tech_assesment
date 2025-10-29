@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/widgets/theme_toggle_button.dart';
 import '../../../../core/di/injection_container.dart';
 import '../bloc/dashboard_bloc.dart';
 
@@ -12,7 +13,10 @@ class DashboardPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<DashboardBloc>()..add(LoadDashboardEvent()),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Dashboard')),
+        appBar: AppBar(
+          title: const Text('Dashboard'),
+          actions: [const ThemeToggleButton()],
+        ),
         body: BlocBuilder<DashboardBloc, DashboardState>(
           builder: (context, state) {
             if (state is DashboardLoading) {

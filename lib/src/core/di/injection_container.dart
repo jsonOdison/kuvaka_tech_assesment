@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:kuvaka_tech_assesment/src/core/app_theme/theme_cubit.dart';
 import 'package:kuvaka_tech_assesment/src/core/constants/hive_keys.dart';
 import 'package:kuvaka_tech_assesment/src/features/dashboard/domain/usecases/get_summary.dart';
 import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/bloc/dashboard_bloc.dart';
@@ -45,4 +46,7 @@ Future<void> init() async {
   );
 
   sl.registerFactory(() => DashboardBloc(sl()));
+
+  // light mode or dark
+  sl.registerLazySingleton(() => ThemeCubit());
 }

@@ -1,121 +1,169 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactionl.dart';
+import 'package:intl/intl.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/widgets/add_transaction_dialog.dart';
 
-class TransactionPage extends StatefulWidget {
+class TransactionPage extends StatelessWidget {
   const TransactionPage({super.key});
-
-  @override
-  State<TransactionPage> createState() => _TransactionPageState();
-}
-
-class _TransactionPageState extends State<TransactionPage> {
-  final sampleTransactions = [
-    TransactionEntity(
-      id: '1',
-      title: 'Salary',
-      amount: 50000,
-      date: DateTime.now(),
-      category: 'Income',
-      isExpense: false,
-    ),
-    TransactionEntity(
-      id: '2',
-      title: 'Freelance',
-      amount: 15000,
-      date: DateTime.now(),
-      category: 'Income',
-      isExpense: false,
-    ),
-    TransactionEntity(
-      id: '3',
-      title: 'Groceries',
-      amount: 4000,
-      date: DateTime.now(),
-      category: 'Food',
-      isExpense: true,
-    ),
-    TransactionEntity(
-      id: '4',
-      title: 'Rent',
-      amount: 12000,
-      date: DateTime.now(),
-      category: 'Housing',
-      isExpense: true,
-    ),
-    TransactionEntity(
-      id: '5',
-      title: 'Utilities',
-      amount: 2000,
-      date: DateTime.now(),
-      category: 'Bills',
-      isExpense: true,
-    ),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    for (final tx in sampleTransactions) {
-      context.read<TransactionBloc>().add(AddTransactionEvent(tx));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Transactions'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.dashboard),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const DashboardPage()),
-              );
-            },
-          ),
-        ],
-      ),
-      body: BlocBuilder<TransactionBloc, TransactionState>(
-        builder: (context, state) {
-          if (state is TransactionLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is TransactionLoaded) {
-            if (state.transactions.isEmpty) {
-              return const Center(child: Text('No transactions yet'));
-            }
-
-            return ListView.builder(
-              itemCount: state.transactions.length,
-              itemBuilder: (context, index) {
-                final t = state.transactions[index];
-                return ListTile(
-                  title: Text(t.title),
-                  subtitle: Text(
-                    '${t.category} • ${t.amount.toStringAsFixed(2)}',
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline),
-                    onPressed: () {
-                      context.read<TransactionBloc>().add(
-                        DeleteTransactionEvent(t.id),
-                      );
-                    },
-                  ),
-                );
-              },
+      appBar: AppBar(title: const Text('Transactions')),
+      body: BlocListener<TransactionBloc, TransactionState>(
+        listener: (context, state) {
+          if (state is TransactionLoaded) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Transactions updated'),
+                duration: Duration(seconds: 1),
+              ),
             );
           } else if (state is TransactionError) {
-            return Center(child: Text(state.message));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.redAccent,
+                duration: const Duration(seconds: 2),
+              ),
+            );
           }
-          return const SizedBox.shrink();
         },
+        child: BlocBuilder<TransactionBloc, TransactionState>(
+          builder: (context, state) {
+            // loading indicator
+            if (state is TransactionLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            // loaded state
+            else if (state is TransactionLoaded) {
+              final transactions = state.transactions;
+
+              if (transactions.isEmpty) {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<TransactionBloc>().add(
+                      LoadTransactionsEvent(),
+                    );
+                    await Future.delayed(const Duration(milliseconds: 800));
+                  },
+                  child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.inbox_outlined,
+                                size: 64,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                'No transactions yet',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Pull down to refresh or tap + to add one',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<TransactionBloc>().add(LoadTransactionsEvent());
+                  await Future.delayed(const Duration(milliseconds: 800));
+                },
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: transactions.length,
+                  itemBuilder: (context, index) {
+                    final t = transactions[index];
+                    return ListTile(
+                      title: Text(t.title),
+                      subtitle: Text(
+                        '${t.category} • ${DateFormat.yMMMd().format(t.date)}',
+                      ),
+                      trailing: Text(
+                        NumberFormat.currency(
+                          locale: 'en_IN',
+                          symbol: '₹',
+                        ).format(t.amount),
+                        style: TextStyle(
+                          color: t.isExpense ? Colors.red : Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onLongPress: () {
+                        context.read<TransactionBloc>().add(
+                          DeleteTransactionEvent(t.id),
+                        );
+                      },
+                    );
+                  },
+                ),
+              );
+            }
+            // error state — now scrollable and refreshable
+            else if (state is TransactionError) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<TransactionBloc>().add(LoadTransactionsEvent());
+                  await Future.delayed(const Duration(milliseconds: 800));
+                },
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              color: Colors.red,
+                              size: 60,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              state.message,
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(color: Colors.redAccent),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Pull down to retry',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            // fallback
+            return const SizedBox.shrink();
+          },
+        ),
       ),
+
+      // add new transaction
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(

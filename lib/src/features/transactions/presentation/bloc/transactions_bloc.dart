@@ -29,6 +29,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     emit(TransactionLoading());
     try {
       final transactions = await getAllTransactions();
+      // transactions.add("ASD" as TransactionEntity);
       emit(TransactionLoaded(transactions));
     } catch (_) {
       emit(TransactionError('Failed to load transactions'));
