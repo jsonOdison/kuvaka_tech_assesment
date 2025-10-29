@@ -29,6 +29,8 @@ class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
     if (budgetBox.containsKey(budget.category)) {
       final model = BudgetModel.fromEntity(budget);
       await budgetBox.put(model.category, model);
+    } else {
+      await budgetBox.put(budget.category, BudgetModel.fromEntity(budget));
     }
   }
 

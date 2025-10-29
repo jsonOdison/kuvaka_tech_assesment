@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:kuvaka_tech_assesment/src/core/utils/number_formatter.dart';
 import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/widgets/theme_toggle_button.dart';
 import '../../../../core/di/injection_container.dart';

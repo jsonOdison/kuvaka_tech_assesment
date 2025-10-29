@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kuvaka_tech_assesment/src/core/constants/budget_list.dart';
 import 'package:kuvaka_tech_assesment/src/core/utils/number_formatter.dart';
 import 'package:kuvaka_tech_assesment/src/features/budget/domain/entities/budget_entiry.dart';
 import 'package:kuvaka_tech_assesment/src/features/budget/presentation/bloc/budget_bloc.dart';
@@ -26,16 +27,60 @@ class BudgetPage extends StatelessWidget {
               itemCount: budgets.length,
               itemBuilder: (context, index) {
                 final budget = budgets[index];
-                return ListTile(
-                  title: Text(budget.category),
-                  subtitle: Text(
-                    'Limit: ${NumberFormatter.format(budget.limit)}',
+                return Dismissible(
+                  key: Key(budget.category), // unique identifier
+                  direction:
+                      DismissDirection.endToStart, // swipe from right to left
+                  background: Container(
+                    color: Colors.redAccent,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      _showBudgetDialog(context, existing: budget);
-                    },
+                  confirmDismiss: (direction) async {
+                    return await showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('Delete Budget'),
+                        content: Text(
+                          'Are you sure you want to delete the budget for "${budget.category}"?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: const Text('Cancel'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: const Text('Delete'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  onDismissed: (direction) {
+                    context.read<BudgetBloc>().add(
+                      DeleteBudgetEvent(budget.category),
+                    );
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${budget.category} budget deleted'),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(budget.category),
+                    subtitle: Text(
+                      'Limit: ${NumberFormatter.format(budget.limit)}',
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        _showBudgetDialog(context, existing: budget);
+                      },
+                    ),
                   ),
                 );
               },
@@ -54,12 +99,11 @@ class BudgetPage extends StatelessWidget {
   }
 
   void _showBudgetDialog(BuildContext context, {BudgetEntity? existing}) {
-    final categoryController = TextEditingController(
-      text: existing?.category ?? '',
-    );
     final limitController = TextEditingController(
       text: existing?.limit.toString() ?? '',
     );
+
+    String selectedCategory = existing?.category ?? 'Food';
 
     showDialog(
       context: context,
@@ -68,9 +112,13 @@ class BudgetPage extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-              controller: categoryController,
+            DropdownButtonFormField<String>(
+              value: selectedCategory,
               decoration: const InputDecoration(labelText: 'Category'),
+              items: categories
+                  .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                  .toList(),
+              onChanged: (val) => selectedCategory = val!,
             ),
             TextField(
               controller: limitController,
@@ -86,11 +134,13 @@ class BudgetPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              final category = categoryController.text.trim();
               final limit = double.tryParse(limitController.text) ?? 0;
-              if (category.isEmpty || limit <= 0) return;
+              if (limit <= 0) return;
 
-              final budget = BudgetEntity(category: category, limit: limit);
+              final budget = BudgetEntity(
+                category: selectedCategory,
+                limit: limit,
+              );
 
               if (existing == null) {
                 context.read<BudgetBloc>().add(AddBudgetEvent(budget));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kuvaka_tech_assesment/src/core/constants/budget_list.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../domain/entities/transactional_entity.dart';
@@ -17,16 +18,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
   final _amountController = TextEditingController();
   String _selectedCategory = 'Food';
   bool _isExpense = true;
-
-  final List<String> _categories = [
-    'Food',
-    'Bills',
-    'Travel',
-    'Shopping',
-    'Health',
-    'Salary',
-    'Other',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +39,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
           DropdownButtonFormField<String>(
             value: _selectedCategory,
             decoration: const InputDecoration(labelText: 'Category'),
-            items: _categories
+            items: categories
                 .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                 .toList(),
             onChanged: (val) => setState(() => _selectedCategory = val!),
