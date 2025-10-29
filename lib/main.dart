@@ -4,6 +4,7 @@ import 'package:kuvaka_tech_assesment/src/core/constants/hive_keys.dart';
 import 'package:kuvaka_tech_assesment/src/core/di/injection_container.dart'
     as di;
 import 'package:kuvaka_tech_assesment/src/features/transactions/data/models/transaction_model.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/pages/transaction_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +24,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
+    return MaterialApp(
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.teal),
+      home: const TransactionPage(),
     );
   }
 }

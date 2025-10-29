@@ -3,9 +3,8 @@ import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/repositories/transaction_repository.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {
-  final TransactionLocalDataSource localDataSource;
-
   TransactionRepositoryImpl({required this.localDataSource});
+  final TransactionLocalDataSource localDataSource;
 
   @override
   Future<void> addTransaction(TransactionEntity transaction) async {

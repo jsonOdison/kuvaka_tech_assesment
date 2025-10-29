@@ -8,6 +8,7 @@ import 'package:kuvaka_tech_assesment/src/features/transactions/domain/repositor
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/usecases/add_transaction.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/usecases/delete_transaction.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/usecases/get_all_transaction.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/bloc/transactions_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -29,4 +30,13 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetAllTransactions(sl()));
   sl.registerLazySingleton(() => AddTransaction(sl()));
   sl.registerLazySingleton(() => DeleteTransaction(sl()));
+
+  // bloc use cases
+  sl.registerFactory(
+    () => TransactionBloc(
+      getAllTransactions: sl(),
+      addTransaction: sl(),
+      deleteTransaction: sl(),
+    ),
+  );
 }

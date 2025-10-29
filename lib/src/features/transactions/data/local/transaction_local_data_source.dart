@@ -9,9 +9,8 @@ abstract class TransactionLocalDataSource {
 }
 
 class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
-  final Box<TransactionModel> transactionBox;
-
   TransactionLocalDataSourceImpl(this.transactionBox);
+  final Box<TransactionModel> transactionBox;
 
   @override
   Future<void> addTransaction(TransactionEntity transaction) async {
