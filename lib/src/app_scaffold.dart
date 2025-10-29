@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kuvaka_tech_assesment/src/features/budget/presentation/bloc/pages/budget_page.dart';
+import 'package:kuvaka_tech_assesment/src/features/budget/presentation/pages/budget_page.dart';
 import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'features/transactions/presentation/pages/transaction_page.dart';
 
