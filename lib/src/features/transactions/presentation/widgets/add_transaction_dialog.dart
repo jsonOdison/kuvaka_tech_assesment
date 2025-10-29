@@ -72,7 +72,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
             if (title.isEmpty || amount <= 0) return;
 
             final transaction = TransactionEntity(
-              id: Uuid().v4(),
+              id: const Uuid().v4(),
               title: title,
               amount: amount,
               category: _selectedCategory,

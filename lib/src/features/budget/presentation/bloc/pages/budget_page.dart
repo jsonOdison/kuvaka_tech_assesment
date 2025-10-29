@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kuvaka_tech_assesment/src/core/utils/number_formatter.dart';
 import 'package:kuvaka_tech_assesment/src/features/budget/domain/entities/budget_entiry.dart';
 import 'package:kuvaka_tech_assesment/src/features/budget/presentation/bloc/budget_bloc.dart';
 
@@ -27,7 +28,9 @@ class BudgetPage extends StatelessWidget {
                 final budget = budgets[index];
                 return ListTile(
                   title: Text(budget.category),
-                  subtitle: Text('Limit: ₹${budget.limit.toStringAsFixed(2)}'),
+                  subtitle: Text(
+                    'Limit: ${NumberFormatter.format(budget.limit)}',
+                  ),
                   trailing: IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () {

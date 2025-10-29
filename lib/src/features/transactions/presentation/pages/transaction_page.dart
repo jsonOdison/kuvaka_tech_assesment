@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:kuvaka_tech_assesment/src/core/utils/number_formatter.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/widgets/add_transaction_dialog.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/widgets/export_csv_button.dart';
@@ -101,10 +102,7 @@ class TransactionPage extends StatelessWidget {
                         '${t.category} • ${DateFormat.yMMMd().format(t.date)}',
                       ),
                       trailing: Text(
-                        NumberFormat.currency(
-                          locale: 'en_IN',
-                          symbol: '₹',
-                        ).format(t.amount),
+                        NumberFormatter.format(t.amount),
                         style: TextStyle(
                           color: t.isExpense ? Colors.red : Colors.green,
                           fontWeight: FontWeight.bold,

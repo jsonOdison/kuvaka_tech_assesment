@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:kuvaka_tech_assesment/src/core/utils/number_formatter.dart';
 import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/widgets/theme_toggle_button.dart';
 import '../../../../core/di/injection_container.dart';
 import '../bloc/dashboard_bloc.dart';
@@ -26,11 +28,11 @@ class DashboardPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Balance: ₹${state.balance.toStringAsFixed(2)}',
+                      "Balance: ${NumberFormatter.format(state.balance)}",
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                    Text('Income: ₹${state.income.toStringAsFixed(2)}'),
-                    Text('Expense: ₹${state.expense.toStringAsFixed(2)}'),
+                    Text("Income: ${NumberFormatter.format(state.income)}"),
+                    Text("Expense: ${NumberFormatter.format(state.expense)}"),
                     const SizedBox(height: 20),
 
                     // Pie Chart for Category Totals
