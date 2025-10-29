@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:kuvaka_tech_assesment/src/core/constants/hive_keys.dart';
+import 'package:kuvaka_tech_assesment/src/features/dashboard/domain/usecases/get_summary.dart';
+import 'package:kuvaka_tech_assesment/src/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/data/local/transaction_local_data_source.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/data/models/transaction_model.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/repositories/transaction_repository.dart';
@@ -31,6 +33,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AddTransaction(sl()));
   sl.registerLazySingleton(() => DeleteTransaction(sl()));
 
+  sl.registerLazySingleton(() => GetSummary(sl()));
+
   // bloc use cases
   sl.registerFactory(
     () => TransactionBloc(
@@ -39,4 +43,6 @@ Future<void> init() async {
       deleteTransaction: sl(),
     ),
   );
+
+  sl.registerFactory(() => DashboardBloc(sl()));
 }
