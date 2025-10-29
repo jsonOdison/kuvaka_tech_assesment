@@ -5,6 +5,33 @@ Built with **Flutter**, **Bloc**, and **Hive**, following clean code principles.
 
 ---
 
+## Setup Instructions
+- Install dependencies:
+   ```bash
+   flutter pub get
+
+- Generate Hive adapters::
+   ```bash
+   dart run build_runner build --delete-conflicting-outputs
+
+# Architecture & State Management
+
+## Architecture
+Feature-based clean architecture
+
+## State Management
+Flutter Bloc for predictable state handling
+
+## Local Storage
+Hive for offline persistence
+
+## Dependency Injection
+GetIt for centralized service registration
+
+## UI
+Stateless and reactive, built with BlocBuilder and BlocListener
+
+
 ## Features
 
 ### Dashboard
