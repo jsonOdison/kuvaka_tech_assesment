@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/data/models/transaction_model.dart';
-import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactionl.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactional_entity.dart';
 
 abstract class TransactionLocalDataSource {
   Future<void> addTransaction(TransactionEntity transaction);

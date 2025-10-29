@@ -1,4 +1,4 @@
-import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactionl.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactional_entity.dart';
 
 import '../repositories/transaction_repository.dart';
 

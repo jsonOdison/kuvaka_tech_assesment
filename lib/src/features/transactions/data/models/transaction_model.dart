@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactionl.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactional_entity.dart';
 
 part 'transaction_model.g.dart';
 

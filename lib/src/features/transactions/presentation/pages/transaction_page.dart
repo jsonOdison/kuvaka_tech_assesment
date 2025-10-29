@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/widgets/add_transaction_dialog.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/presentation/widgets/export_csv_button.dart';
 
 class TransactionPage extends StatelessWidget {
   const TransactionPage({super.key});
@@ -10,7 +11,10 @@ class TransactionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Transactions')),
+      appBar: AppBar(
+        title: const Text('Transactions'),
+        actions: const [ExportCsvButton()],
+      ),
       body: BlocListener<TransactionBloc, TransactionState>(
         listener: (context, state) {
           if (state is TransactionLoaded) {

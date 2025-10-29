@@ -1,5 +1,5 @@
 import 'package:kuvaka_tech_assesment/src/features/transactions/data/local/transaction_local_data_source.dart';
-import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactionl.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactional_entity.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/repositories/transaction_repository.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {

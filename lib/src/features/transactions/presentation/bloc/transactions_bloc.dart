@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactionl.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/domain/entities/transactional_entity.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/usecases/add_transaction.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/usecases/delete_transaction.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/usecases/get_all_transaction.dart';
