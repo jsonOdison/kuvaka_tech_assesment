@@ -5,6 +5,9 @@ import 'package:kuvaka_tech_assesment/src/features/transactions/data/local/trans
 import 'package:kuvaka_tech_assesment/src/features/transactions/data/models/transaction_model.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/repositories/transaction_repository.dart';
 import 'package:kuvaka_tech_assesment/src/features/transactions/domain/repositories/transaction_repository_impl.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/domain/usecases/add_transaction.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/domain/usecases/delete_transaction.dart';
+import 'package:kuvaka_tech_assesment/src/features/transactions/domain/usecases/get_all_transaction.dart';
 
 final sl = GetIt.instance;
 
@@ -21,4 +24,9 @@ Future<void> init() async {
   sl.registerLazySingleton<TransactionRepository>(
     () => TransactionRepositoryImpl(localDataSource: sl()),
   );
+
+  // use cases
+  sl.registerLazySingleton(() => GetAllTransactions(sl()));
+  sl.registerLazySingleton(() => AddTransaction(sl()));
+  sl.registerLazySingleton(() => DeleteTransaction(sl()));
 }
