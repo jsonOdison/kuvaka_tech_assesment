@@ -6,6 +6,8 @@ Built with **Flutter**, **Bloc**, and **Hive**, following clean code principles.
 ---
 
 ## Setup Instructions
+- Install Flutter: 3.5.0
+- 
 - Install dependencies:
    ```bash
    flutter pub get
