@@ -113,7 +113,7 @@ class BudgetPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
-              value: selectedCategory,
+              initialValue: selectedCategory,
               decoration: const InputDecoration(labelText: 'Category'),
               items: categories
                   .map((c) => DropdownMenuItem(value: c, child: Text(c)))

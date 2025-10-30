@@ -37,7 +37,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
           ),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
-            value: _selectedCategory,
+            initialValue: _selectedCategory,
             decoration: const InputDecoration(labelText: 'Category'),
             items: categories
                 .map((c) => DropdownMenuItem(value: c, child: Text(c)))
